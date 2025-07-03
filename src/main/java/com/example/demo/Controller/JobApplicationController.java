@@ -4,10 +4,12 @@ import com.example.demo.Entity.Job;
 import com.example.demo.Entity.JobAssignment;
 import com.example.demo.Entity.Homeowner;
 import com.example.demo.Entity.MaintenanceWorker;
+import com.example.demo.Entity.Review;
 import com.example.demo.Repository.JobAssignmentsRepository;
 import com.example.demo.Repository.JobRepository;
 import com.example.demo.Repository.HomeownerRepository;
 import com.example.demo.Repository.WorkerRepository;
+import com.example.demo.Repository.ReviewRepository;
 
 import ch.qos.logback.core.util.SystemInfo;
 
@@ -32,6 +34,8 @@ public class JobApplicationController {
     private HomeownerRepository homeownerRepository;
     @Autowired
     private WorkerRepository maintenanceWorkerRepository;
+    @Autowired  
+    private ReviewRepository reviewRepository;
 
     @PostMapping
     public ResponseEntity<?> applyForJob(@RequestBody Map<String, String> applicationData) {
@@ -89,10 +93,13 @@ public class JobApplicationController {
     }
 
      @GetMapping("/homeowner/{email}")
+    //return those that are not completed and pending
     public List<JobAssignment> getAssignmentsByHomeownerEmail(@PathVariable String email) {
-        return jobAssignmentsRepository.findByHomeownerEmail(email);
+        return jobAssignmentsRepository.findByHomeownerEmail(email).stream()
+                .filter(a -> !"Completed".equalsIgnoreCase(a.getApplicationStatus()))
+                .toList();
     }
-
+    
     @GetMapping("/worker/{email}")
     public List<JobAssignment> getAssignmentsByWorkerEmail(@PathVariable String email) {
         return jobAssignmentsRepository.findByWorkerEmail(email);
@@ -174,4 +181,21 @@ public class JobApplicationController {
         response.put("message", "Application status updated successfully.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+   
+
+    //fetch those completed jobs that have not been reviewed by the homeowner
+    @GetMapping("/unreviewed-jobs/homeowner/{email}")
+    public List<JobAssignment> getUnreviewedJobsByHomeownerEmail(@PathVariable String email) {
+        List<JobAssignment> completedJobs = jobAssignmentsRepository.findByHomeownerEmail(email).stream()
+                .filter(a -> "Completed".equalsIgnoreCase(a.getApplicationStatus()))
+                .toList();
+
+        // Filter out jobs that have already been reviewed
+        return completedJobs.stream()
+                .filter(assignment -> !reviewRepository.existsByHomeownerAndJob(assignment.getHomeowner(), assignment.getJob()))
+                .toList();
+    }
+
+    
 }
