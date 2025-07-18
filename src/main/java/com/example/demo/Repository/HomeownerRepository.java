@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface HomeownerRepository extends JpaRepository<Homeowner, Long> {
     boolean existsByEmail(String email);
     Homeowner findByEmail(String email);
+    
 }
