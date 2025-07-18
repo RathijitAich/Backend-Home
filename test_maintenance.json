@@ -1,0 +1,9 @@
+{
+  "id": 1737241200000,
+  "device": "Refrigerator",
+  "task": "Coil Cleaning",
+  "frequency": "quarterly",
+  "lastDone": "2025-04-19",
+  "nextDue": "2025-07-19",
+  "userEmail": "test@example.com"
+}
