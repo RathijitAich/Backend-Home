@@ -197,5 +197,12 @@ public class JobApplicationController {
                 .toList();
     }
 
+    //fetch those completed jobs by worker email
+    @GetMapping("/completed-jobs/worker/{email}")
+    public List<JobAssignment> getCompletedJobsByWorkerEmail(@PathVariable String email) {
+        return jobAssignmentsRepository.findByWorkerEmail(email).stream()
+                .filter(a -> "Completed".equalsIgnoreCase(a.getApplicationStatus()))
+                .toList();
+    }
     
 }

@@ -33,7 +33,10 @@ public class RoomSetupController {
     @PostMapping("/room")
     public ResponseEntity<Map<String, String>> addRoom(@RequestBody Room room) {
        
-      // first check the room name unique or not
+        // first check the room name unique or not
+
+        // print the received room object for debugging
+        System.out.println("Received room: " + room);
         Room existingRoom = roomRepo.findByRoomName(room.getRoomName());
         if (existingRoom != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
@@ -50,6 +53,9 @@ public class RoomSetupController {
 
         // Set default values
         room.setCreatedAt(LocalDateTime.now());
+        room.setRoomType(room.getRoomType());
+
+        // Set to null or a default value if needed
         // Remove duplicate line: room.setCreatedAt(LocalDateTime.now());
         // room.setTotalDevices(BigDecimal.ZERO); // Remove this line if totalDevices doesn't exist
 

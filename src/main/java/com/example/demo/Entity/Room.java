@@ -20,6 +20,9 @@ public class Room {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
+    @Column (name = "room_type", nullable = false)
+    private String roomType;
+
     // Foreign key to Homeowner by email
     @ManyToOne
     @JoinColumn(name = "user_email", referencedColumnName = "email", nullable = false)
@@ -41,4 +44,6 @@ public class Room {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'setTotalDevices'");
     }
+    public String getRoomType() { return roomType; }
+    public void setRoomType(String roomType) { this.roomType = roomType; }
 }
