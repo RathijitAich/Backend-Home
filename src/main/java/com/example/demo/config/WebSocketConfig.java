@@ -18,8 +18,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(org.springframework.web.socket.config.annotation.StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins(
-                    "https://homemanagementfrontend-eta.vercel.app",
+                .setAllowedOriginPatterns(
+                    "https://*.vercel.app",
                     "http://localhost:3000"
                 )
                 .withSockJS();
